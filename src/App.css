@@ -1,3 +1,7 @@
+body {
+  font-family: sans-serif, serif;
+}
+
 .container {
   width: 16em;
   height: 27em;
@@ -11,5 +15,16 @@
   grid-gap: 5px;
   justify-items: center;
   align-items: center;
+}
+
+.display {
+  grid-column: 1 / 5;
+  color: white;
+  width: 100%;
+  height: 100%;
+  font-size: 2.5rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
 }
 
