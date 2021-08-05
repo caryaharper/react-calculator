@@ -134,7 +134,7 @@ const formatDivisionOrMult = (dividen, divisor) => {
 }
 
 //handles division
-const  division = (dividen, divisor, precision = 20) => {
+const division = (dividen, divisor, precision = 20) => {
     const [bigDividen, bigDivisor, sign] = formatDivisionOrMult(dividen, divisor);
 
     if (Number(bigDivisor) === 0) {
@@ -231,4 +231,4 @@ const multiply =  (multiplicand, multiplier) => {
         
 }
 
-export {onePercent, addOrSubtractDecimals, division, multiply};
+export { onePercent, addOrSubtractDecimals, division, multiply };
