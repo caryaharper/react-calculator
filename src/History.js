@@ -1,8 +1,6 @@
 import React from 'react';
 
-const History = (history, handler) => {
-    const subHistory = history.map((ele, i) => <div className="sub-history-content closed" key={i}>{ele}</div>);
-
+export const History = (history, handler) => {
     return (
         <div className="history">
             <div className="history-control">
@@ -10,7 +8,7 @@ const History = (history, handler) => {
                 <button className="control-buttons" onClick={()=> handler('empty')}>🗑</button>
                 <button className="control-buttons" onClick={()=> handler('close')}>⬇️</button>
             </div>
-            <div className="history-content">{subHistory}</div>
+            <div className="history-content closed">{history.map((ele, i) => <div className="sub-history-content" key={i}>{ele}</div>)}</div>
         </div>
     )
-}
+};
