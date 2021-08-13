@@ -12,7 +12,7 @@ const Button = ({ value, handler }) => {
         buttonType = 'spec-buttons';
     }
 
-    return <button className={`buttons ${buttonType}`} onClick={() => handler(value)}>value</button>
+    return <button className={`buttons ${buttonType}`} onClick={() => handler(value, buttonType)}>value</button>
 }
 
 export default Button;
