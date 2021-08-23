@@ -8,11 +8,11 @@ const Button = ({ value, handler }) => {
         buttonType = 'int-buttons'
     } 
     
-    if(value === 'C' || value === '±' || value === '÷') {
+    if(value === 'C' || value === '±' || value === '%') {
         buttonType = 'spec-buttons';
     }
 
-    return <button className={`buttons ${buttonType}`} onClick={() => handler(value, buttonType)}>value</button>
+    return <button className={`buttons ${buttonType}`} id={value === 0 ? 'zero' : undefined} onClick={() => handler(value, buttonType)}>{value}</button>
 }
 
 export default Button;
