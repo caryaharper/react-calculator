@@ -80,7 +80,35 @@ const Calculator = () => {
         }
 
         if (value === '=') {
-            return
+            if (display[currentNumStart] === undefined) {
+                return;
+            }
+
+            let equation = display.split(' ');
+
+            for (let i = 1; i < equation.length; i++) {
+                if (equation[i] === 'x') {
+                    equation = [equation.slice(0, i - 1), multiply(equation[i - 1], equation[i + 1]), equation.slice(i + 2)];
+                    i = 1;
+                    continue;
+                }
+
+                if (equation[i] === '÷') {
+                    equation = [equation.slice(0, i - 1), division(equation[i - 1], equation[i + 1]), equation.slice(i + 2)];
+                    i = 1;
+                    continue;
+                }
+            }
+
+            for (let i = 1; i < equation.length; i++) {
+                if (equation[i] === '+' || equation[i] === '–') {
+                    equation = [equation.slice(0, i - 1), addOrSubtractDecimals(equation[i - 1], equation[i + 1], equation[i]), equation.slice(i + 2)];
+                    i = 0;
+                    continue;
+                }
+
+                setDisplay(equation[0]);
+            }
         }
 
         if (className === 'op-buttons') {
@@ -97,6 +125,7 @@ const Calculator = () => {
     
     }
 
+    //the subtraction symbol being used has a UTF-16 code of 8211
     const controlValues = ['C', '±', '%', '÷', 7, 8, 9, 'x', 4, 5, 6, '–', 1, 2, 3, '+', 0, '.', '='].map(value => <Button key={String(value)} value={value} handler={handleClick} />);
     
 
