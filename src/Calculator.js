@@ -21,17 +21,14 @@ const Calculator = () => {
         //handles appending numbers to the current display
         if (className === 'int-buttons') {
 
-            //ensures decimals and zeros are not improperly added
-            if (
-                (value === '.' && (currentNumIsDec ||display[currentNumStart] === undefined)) || 
-                (value === 0 && display[currentNumStart] === undefined)
-            ) {
+            //ensures decimals are not improperly added
+            if ((value === '.' && (currentNumIsDec ||display[currentNumStart] === undefined))) {
                 return;
             }
 
-            //
-            if (display === '0' && value !== '.') {
-                setDisplay(String(value));
+            //ensures zeros are not improperly added
+            if (Number.isInteger(value) && display[currentNumStart] === '0' && !currentNumIsDec) {
+                setDisplay(`${display.slice(0, currentNumStart)}${value}`);
                 return;
             }
 
@@ -80,6 +77,7 @@ const Calculator = () => {
         }
 
         if (value === '=') {
+
             if (display[currentNumStart] === undefined) {
                 return;
             }
@@ -88,13 +86,13 @@ const Calculator = () => {
 
             for (let i = 1; i < equation.length; i++) {
                 if (equation[i] === 'x') {
-                    equation = [equation.slice(0, i - 1), multiply(equation[i - 1], equation[i + 1]), equation.slice(i + 2)];
+                    equation = [...equation.slice(0, i - 1), multiply(equation[i - 1], equation[i + 1]), ...equation.slice(i + 2)];
                     i = 1;
                     continue;
                 }
 
                 if (equation[i] === '÷') {
-                    equation = [equation.slice(0, i - 1), division(equation[i - 1], equation[i + 1]), equation.slice(i + 2)];
+                    equation = [...equation.slice(0, i - 1), division(equation[i - 1], equation[i + 1]), ...equation.slice(i + 2)];
                     i = 1;
                     continue;
                 }
@@ -102,17 +100,21 @@ const Calculator = () => {
 
             for (let i = 1; i < equation.length; i++) {
                 if (equation[i] === '+' || equation[i] === '–') {
-                    equation = [equation.slice(0, i - 1), addOrSubtractDecimals(equation[i - 1], equation[i + 1], equation[i]), equation.slice(i + 2)];
+                    equation = [...equation.slice(0, i - 1), addOrSubtractDecimals(equation[i - 1], equation[i + 1], equation[i]), ...equation.slice(i + 2)];
                     i = 0;
                     continue;
-                }
-
-                setDisplay(equation[0]);
+                }                
             }
+
+            setNumIsDec(equation[0].indexOf('.') !== -1);
+            setDisplay(equation[0]);
+            setStart(0);
+            
+            return;
         }
 
         if (className === 'op-buttons') {
-            
+
             if (display[currentNumStart] === undefined) {
                 setDisplay(`${display.slice(0, currentNumStart - 3)} ${value} `);
                 return;
