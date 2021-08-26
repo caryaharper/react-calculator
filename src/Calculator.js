@@ -28,6 +28,13 @@ const Calculator = () => {
                 return;
             }
 
+            if (display === 'Error') {
+                if (Number.isInteger(value)) {
+                    setDisplay(String(value));
+                }
+                return;
+            }
+
             //ensures zeros are not improperly added
             if (Number.isInteger(value) && display[currentNumStart] === '0' && !currentNumIsDec) {
                 setDisplay(`${display.slice(0, currentNumStart)}${value}`);
@@ -44,7 +51,7 @@ const Calculator = () => {
         //handles negating if the last value in display is a number
         if (value === '±') {
             
-            if (display[currentNumStart] === undefined || display === '0') {
+            if (display[currentNumStart] === undefined || display === '0' || display === 'Error') {
                 return;
             }
 
@@ -57,7 +64,7 @@ const Calculator = () => {
         if (value === '%') {
             
             //return  if the last value in display is not a number
-            if (display[currentNumStart] === undefined || display === '0') {
+            if (display[currentNumStart] === undefined || display === '0' || display === 'Error') {
                 return;
             }
 
@@ -89,12 +96,22 @@ const Calculator = () => {
             for (let i = 1; i < equation.length; i++) {
                 if (equation[i] === 'x') {
                     equation = [...equation.slice(0, i - 1), multiply(equation[i - 1], equation[i + 1]), ...equation.slice(i + 2)];
+
                     i = 1;
                     continue;
                 }
 
                 if (equation[i] === '÷') {
                     equation = [...equation.slice(0, i - 1), division(equation[i - 1], equation[i + 1]), ...equation.slice(i + 2)];
+
+                    if (equation[i - 1] === 'Error') {
+                        setHistory([...history,  display.slice(currentNumStart, display.length), value, equation[0]]);
+                        setNumIsDec(false);
+                        setDisplay(equation[i - 1]);
+                        setStart(0);
+                        return;
+                    }
+
                     i = 1;
                     continue;
                 }
@@ -120,6 +137,11 @@ const Calculator = () => {
         }
 
         if (className === 'op-buttons') {
+            
+            if (display === 'Error') {
+                return;
+            }
+
 
             if (display[currentNumStart] === undefined) {
                 setHistory([...history.slice(0, history.length - 1), value]);
@@ -128,7 +150,7 @@ const Calculator = () => {
             }
 
             setNumIsDec(false);
-            setHistory(history.at(-2) !== '=' ? [...history, display.slice(currentNumStart, display.length), value] : [...history, value])
+            setHistory((history.at(-2) !== '=' || history.at(-1) === 'Error') ? [...history, display.slice(currentNumStart, display.length), value] : [...history, value])
             setStart(display.length + 3);
             setDisplay(`${display} ${value} `);
         }
