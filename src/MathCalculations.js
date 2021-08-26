@@ -137,12 +137,12 @@ const formatDivisionOrMult = (dividen, divisor) => {
 const division = (dividen, divisor, precision = 20) => {
     const [bigDividen, bigDivisor, sign] = formatDivisionOrMult(dividen, divisor);
 
-    if (Number(bigDivisor) === 0) {
-        return 'Error: Divide by zero'
+    if (bigDivisor === '0') {
+        return 'Error'
     }
     
     //if division has no remainder it will simply divide
-    if (BigInt(bigDividen) >= BigInt(bigDivisor) && !(BigInt(bigDividen) % BigInt(bigDivisor))) {
+    if ((BigInt(bigDividen) >= BigInt(bigDivisor) && !(BigInt(bigDividen) % BigInt(bigDivisor))) || bigDividen === '0') {
         const remainder = String(BigInt(bigDividen) / BigInt(bigDivisor))
         return remainder === '0' ? '0' : `${sign}${remainder}`;
     }
