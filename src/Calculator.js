@@ -16,6 +16,8 @@ const Calculator = () => {
 
     const [history, setHistory] = useState([]);
 
+    const [showHistory, setShowHistory] = useState(false);
+
     function handleClick (value, className) {
 
         //handles appending numbers to the current display
@@ -106,6 +108,10 @@ const Calculator = () => {
                 }                
             }
 
+            if (display[currentNumStart - 1] === ' ') {
+                setHistory([...history,  display.slice(currentNumStart, display.length), value, equation[0]])
+            }
+
             setNumIsDec(equation[0].indexOf('.') !== -1);
             setDisplay(equation[0]);
             setStart(0);
@@ -116,15 +122,31 @@ const Calculator = () => {
         if (className === 'op-buttons') {
 
             if (display[currentNumStart] === undefined) {
+                setHistory([...history.slice(0, history.length - 1), value]);
                 setDisplay(`${display.slice(0, currentNumStart - 3)} ${value} `);
                 return;
             }
 
             setNumIsDec(false);
+            setHistory(history.at(-2) !== '=' ? [...history, display.slice(currentNumStart, display.length), value] : [...history, value])
             setStart(display.length + 3);
             setDisplay(`${display} ${value} `);
         }
     
+    }
+
+    const handleHistory = (status) => {
+        if (status === 'open') {
+            setShowHistory(true);
+        }
+
+        if (status === 'empty') {
+            setHistory([]);
+        }
+
+        if (status === 'close') {
+            setShowHistory(false);
+        }
     }
 
     //the subtraction symbol being used has a UTF-16 code of 8211
@@ -132,12 +154,15 @@ const Calculator = () => {
     
 
     return (
+    <>
         <div className='container'>
             <div className='display'>
                 {display}
             </div>
             {controlValues}
         </div>
+        <History history={history} handler={handleHistory} open={showHistory}/>
+    </>
     )
 }
 
